@@ -1,30 +1,39 @@
-# @anubis/widget-core
+# @anubis/core
 
-Shared **runtime** for Anubis World web-component widgets (payments, cabinet,
-auth, reviews, download). Pairs with [`@anubis/ds`](https://github.com/damanoreshkan-beep/anubis-ds)
-— `ds` is the visual layer (Tailwind preset, `cn`, components), `widget-core`
-is the logic layer.
+Shared **runtime + build presets** for Anubis World web-component widgets
+(payments, cabinet, auth, reviews, download). Pairs with
+[`@anubis/ds`](https://github.com/damanoreshkan-beep/anubis-ds) — `ds` is the
+visual layer (Tailwind preset, `cn`, components, `scope-globals`), `core` is
+the logic + widget-build layer.
 
 Extracted to kill cross-widget duplication (each widget used to copy these).
 
 ## Exports
 
-- `readCachedRates()` / `isFresh()` / `fetchRates()` / `Rates` — UAH→USD/RUB FX
-  with a 24h localStorage cache.
-- `pickLocale(copy, lang, fallback?)` — generic locale selector for a widget's
-  `COPY` object (2-char keys, `en` fallback).
+- `@anubis/core` — runtime:
+  - `readCachedRates()` / `isFresh()` / `fetchRates()` / `Rates` — UAH→USD/RUB FX (24h cache).
+  - `pickLocale(copy, lang, fallback?)` — locale selector for a widget's `COPY`.
+  - `obtainSharedClient(url?, key?)` — one Supabase client per page (via `anubis-need-supabase`).
+- `@anubis/core/vite-preset` — `widgetVite({ dir, fileName, assetsInlineLimit? })`
+  shared Vite library config (preact/compat, single-file ES bundle).
 
 ## Consuming
 
 ```jsonc
 // widget package.json
 "dependencies": {
-  "@anubis/widget-core": "github:damanoreshkan-beep/anubis-widget-core"
+  "@anubis/core": "github:damanoreshkan-beep/anubis-core"
 }
 ```
 
 ```ts
-import { fetchRates, readCachedRates, isFresh, pickLocale } from '@anubis/widget-core'
+import { fetchRates, pickLocale, obtainSharedClient } from '@anubis/core'
+```
+
+```ts
+// vite.config.ts
+import { widgetVite } from '@anubis/core/vite-preset'
+export default widgetVite({ dir: import.meta.dirname, fileName: 'anubis-<name>.js' })
 ```
 
 `dist/` is committed so consumers install straight from GitHub without a build
