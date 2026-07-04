@@ -11,9 +11,12 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./vite-preset": "./vite-preset.mjs"
+    "./vite-preset": {
+      "types": "./vite-preset.d.ts",
+      "import": "./vite-preset.mjs"
+    }
   },
-  "files": ["dist", "vite-preset.mjs"],
+  "files": ["dist", "vite-preset.mjs", "vite-preset.d.ts"],
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },
